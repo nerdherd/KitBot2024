@@ -240,6 +240,27 @@ public final class Constants {
     public static final int kAprilTagPipeline = 4;
     public static final double kSlidingOffset = 0.4; // Meters away from grid while robot is sliding.
     public static final double fieldXOffset = 8.27; // Certified (Half field dimensions)
-    public static final double fieldYOffset = 4.01; // Certified (Half as well)
+    public static final 
+    double fieldYOffset = 4.01; // Certified (Half as well)
+  }
+
+  public static final class ShooterConstants {
+    public static final int kTopMotorID = 0;
+    public static final int kBottomMotorID = 0;
+    public static final int kIntakePower = 0;
+    public static final int kOuttakePower = 0;
+    public static final PrefDouble kPTopMotor = new PrefDouble("P Top Motor", 0);
+    public static final PrefDouble kITopMotor = new PrefDouble("I Top Motor", 0);
+    public static final PrefDouble kDTopMotor = new PrefDouble("D Top Motor", 0);
+    public static final PrefDouble kFTopMotor = new PrefDouble("F Top Motor", 0);
+
+    public static final PrefDouble kPBottomMotor = new PrefDouble("P Bottom Motor", 0);
+    public static final PrefDouble kIBottomMotor = new PrefDouble("I Bottom Motor", 0);
+    public static final PrefDouble kDBottomMotor = new PrefDouble("D Bottom Motor", 0);
+    public static final PrefDouble kFBottomMotor =new PrefDouble("F Bottom Motor", 0);
+
+
+
+
   }
 }

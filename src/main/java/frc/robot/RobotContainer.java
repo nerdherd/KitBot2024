@@ -24,12 +24,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.commands.SwerveJoystickCommand.DodgeDirection;
 // import frc.robot.commands.VisionAutos.ToNearestGridDebug;
 import frc.robot.commands.autos.PathPlannerAutos;
 import frc.robot.commands.autos.SquareTest;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Reportable.LOG_LEVEL;
 import frc.robot.subsystems.imu.Gyro;
 import frc.robot.subsystems.imu.NavX;
@@ -53,6 +55,7 @@ public class RobotContainer {
   // public Gyro imu = new Pigeon(60);
   public SwerveDrivetrain swerveDrive;
   public PowerDistribution pdp = new PowerDistribution(0, ModuleType.kCTRE);
+  public Shooter shooter = new Shooter();
 
   private final CommandPS4Controller commandDriverController = new CommandPS4Controller(
       ControllerConstants.kDriverControllerPort);
@@ -152,7 +155,14 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> swerveDrive.setVelocityControl(true)))
       .onFalse(Commands.runOnce(() -> swerveDrive.setVelocityControl(false)));
     
+    commandDriverController.triangle()
+      .onTrue(Commands.runOnce(() -> shooter.intake(ShooterConstants.kIntakePower, ShooterConstants.kIntakePower)))
+      .onFalse(Commands.runOnce(() -> shooter.intake(0, 0)));
     
+    commandDriverController.square()
+      .onTrue(Commands.runOnce(() -> shooter.outtake(ShooterConstants.kOuttakePower, ShooterConstants.kOuttakePower)))
+      .onFalse(Commands.runOnce(() -> shooter.outtake(0, 0)));
+
     // Note:
     // L2:  hold = intake     let go = stow + hold
     // L1:  press = aim low   let go = score + stow
