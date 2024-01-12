@@ -245,8 +245,8 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static final int kTopMotorID = 0;
-    public static final int kBottomMotorID = 0;
+    public static final int kTopMotorID = 10;
+    public static final int kBottomMotorID = 11;
     public static final int kIntakePower = 0;
     public static final int kOuttakePower = 0;
     public static final PrefDouble kPTopMotor = new PrefDouble("P Top Motor", 0);

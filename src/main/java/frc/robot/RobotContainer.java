@@ -67,16 +67,6 @@ public class RobotContainer {
   // private final Joystick joystick = new Joystick(2);
 
   private final LOG_LEVEL loggingLevel = LOG_LEVEL.ALL;
-  private final POVButton upButton = new POVButton (operatorController,0);
-  private final POVButton rightButton = new POVButton (operatorController, 90);
-  private final POVButton downButton = new POVButton (operatorController, 180);
-  private final POVButton leftButton = new POVButton (operatorController, 270);
-
-  private final POVButton upButtonDriver = new POVButton (driverController, 0);
-  private final POVButton rightButtonDriver = new POVButton (driverController, 90);
-  private final POVButton downButtonDriver = new POVButton (driverController, 180);
-  private final POVButton leftButtonDriver = new POVButton (driverController, 270);
-
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
   // private PrimalSunflower backSunflower = new PrimalSunflower(VisionConstants.kLimelightBackName);
@@ -148,35 +138,38 @@ public class RobotContainer {
     // commandDriverController.options().onTrue(Commands.runOnce(wrist::resetEncoders));
     // commandDriverController.PS().whileTrue(new TheGreatBalancingAct(swerveDrive));
 
-    commandDriverController.cross().whileTrue(Commands.run(() -> swerveDrive.driveToSunflower(4, 5)));
+    // commandDriverController.cross().whileTrue(Commands.run(() -> swerveDrive.driveToSunflower(4, 5)));
 
     // commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
-    commandDriverController.circle()
-      .onTrue(Commands.runOnce(() -> swerveDrive.setVelocityControl(true)))
-      .onFalse(Commands.runOnce(() -> swerveDrive.setVelocityControl(false)));
+    // commandDriverController.circle()
+    //   .onTrue(Commands.runOnce(() -> swerveDrive.setVelocityControl(true)))
+    //   .onFalse(Commands.runOnce(() -> swerveDrive.setVelocityControl(false)));
     
-    commandDriverController.triangle()
-      .onTrue(Commands.runOnce(() -> shooter.intake(ShooterConstants.kIntakePower, ShooterConstants.kIntakePower)))
-      .onFalse(Commands.runOnce(() -> shooter.intake(0, 0)));
+    // commandDriverController.triangle()
+    //   .onTrue(Commands.runOnce(() -> shooter.intake(ShooterConstants.kIntakePower, ShooterConstants.kIntakePower)))
+    //   .onFalse(Commands.runOnce(() -> shooter.intake(0, 0)));
     
-    commandDriverController.square()
-      .onTrue(Commands.runOnce(() -> shooter.outtake(ShooterConstants.kOuttakePower, ShooterConstants.kOuttakePower)))
-      .onFalse(Commands.runOnce(() -> shooter.outtake(0, 0)));
-
-    // Note:
-    // L2:  hold = intake     let go = stow + hold
-    // L1:  press = aim low   let go = score + stow
-    // R1:  press = aim mid   let go = score + stow
-    // R2:  press = aim high  let go = score + stow
-
-    // commandOperatorController.square()
-    //   .onTrue(temp += 10)
-    //   .onFalse(temp -= 10);
-
-    // commandOperatorController.square()
-    //   .onTrue(new InstantCommand(() -> new ToNearestGridDebug(swerveDrive, sunflower)));
-    // commandOperatorController.cross()
-    //   .onTrue(new InstantCommand(() -> sunflower.toNearestGrid()));
+    // commandDriverController.square()
+    //   .onTrue(Commands.runOnce(() -> shooter.outtake(ShooterConstants.kOuttakePower, ShooterConstants.kOuttakePower)))
+    //   .onFalse(Commands.runOnce(() -> shooter.outtake(0, 0)));
+    
+      commandOperatorController.povUp().onTrue(shooter.increaseTop());
+      commandOperatorController.povDown().onTrue(shooter.decreaseTop());
+  
+      commandOperatorController.povLeft().onTrue(shooter.increaseBottom());
+      commandOperatorController.povRight().onTrue(shooter.decreaseBottom());
+  
+      commandOperatorController.triangle()
+        .onTrue(shooter.setIndex(0).andThen(shooter.setSpeed()))
+        .onFalse(shooter.setPowerZero());
+      
+      commandOperatorController.square()
+        .onTrue(shooter.setIndex(1).andThen(shooter.setSpeed()))
+        .onFalse(shooter.setPowerZero());
+  
+      commandOperatorController.circle()
+        .onTrue(shooter.setIndex(2).andThen(shooter.setSpeed()))
+        .onFalse(shooter.setPowerZero());
   }
 
   private void initAutoChoosers() {
@@ -204,7 +197,9 @@ public class RobotContainer {
   }
   
   public void initShuffleboard() {
+    shooter.reportToSmartDashboard();
     imu.initShuffleboard(loggingLevel);
+    // shooter.initShuffleboard();
     // backSunflower.initShuffleboard(loggingLevel);
     // frontSunflower.initShuffleboard(loggingLevel);
     swerveDrive.initShuffleboard(loggingLevel);
@@ -233,4 +228,5 @@ public class RobotContainer {
     swerveDrive.setDriveMode(DRIVE_MODE.AUTONOMOUS);
     return currentAuto;
   }
+
 }
